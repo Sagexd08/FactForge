@@ -1,0 +1,26 @@
+{
+  "name": "factforge",
+  "version": "1.0.0",
+  "description": "A project for fact checking and data verification.",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Sagexd08/FactForge.git"
+  },
+  "keywords": [
+    "fact-checking",
+    "data-verification",
+    "typescript"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.0.0"
+  }
+}
