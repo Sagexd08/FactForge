@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1 class="text-center mb-4">ℹ️ About</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>🤖 Model Information</h5>
+            </div>
+            <div class="card-body">
+                {% if model_info %}
+                <p><strong>Model Name:</strong> {{ model_info.model_name }}</p>
+                <p><strong>Model Type:</strong> {{ model_info.model_type }}</p>
+                <p><strong>Training Date:</strong> {{ model_info.save_date }}</p>
+                <h6>Performance Metrics:</h6>
+                <ul>
+                    <li>Accuracy: {{ "%.1f"|format(model_info.performance_metrics.accuracy * 100) }}%</li>
+                    <li>Precision: {{ "%.3f"|format(model_info.performance_metrics.precision) }}</li>
+                    <li>Recall: {{ "%.3f"|format(model_info.performance_metrics.recall) }}</li>
+                    <li>F1-Score: {{ "%.3f"|format(model_info.performance_metrics.f1_score) }}</li>
+                </ul>
+                {% else %}
+                <p>No model information available.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>📚 How It Works</h5>
+            </div>
+            <div class="card-body">
+                <ol>
+                    <li><strong>Text Preprocessing:</strong> The input text is cleaned, tokenized, and processed using NLTK</li>
+                    <li><strong>Feature Extraction:</strong> TF-IDF vectorization converts text into numerical features</li>
+                    <li><strong>Classification:</strong> Machine learning model predicts FAKE or REAL</li>
+                    <li><strong>Confidence Score:</strong> Probability score indicates prediction certainty</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5>⚠️ Disclaimer</h5>
+            </div>
+            <div class="card-body">
+                <p>This tool is for educational and research purposes. The predictions are based on machine learning
+                models trained on sample data and should not be considered as definitive truth. Always verify
+                information from multiple reliable sources.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - FactForge{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary mb-3">
+        <i class="fas fa-hammer me-3"></i>FactForge
+    </h1>
+    <p class="lead text-muted">Advanced AI system for forging truth from news - detecting authenticity with precision</p>
+
+    {% if model_info %}
+    <div class="alert alert-info d-inline-block">
+        <i class="fas fa-robot me-2"></i>
+        <strong>{{ model_info.model_name }}</strong> |
+        Accuracy: <strong>{{ "%.1f"|format(model_info.performance_metrics.accuracy * 100) }}%</strong> |
+        F1-Score: <strong>{{ "%.3f"|format(model_info.performance_metrics.f1_score) }}</strong>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="feature-icon">
+                    <i class="fas fa-search-plus"></i>
+                </div>
+                <h5 class="card-title">Quick Analysis</h5>
+                <p class="card-text">Analyze individual news articles for authenticity with confidence scores</p>
+                <a href="/analyze" class="btn btn-primary">
+                    <i class="fas fa-arrow-right me-2"></i>Start Analysis
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="feature-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h5 class="card-title">Batch Processing</h5>
+                <p class="card-text">Process multiple news articles simultaneously for bulk analysis</p>
+                <a href="/batch" class="btn btn-success">
+                    <i class="fas fa-upload me-2"></i>Batch Analyze
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 text-center">
+            <div class="card-body">
+                <div class="feature-icon">
+                    <i class="fas fa-history"></i>
+                </div>
+                <h5 class="card-title">Analysis History</h5>
+                <p class="card-text">View your previous analyses and track prediction patterns</p>
+                <a href="/history" class="btn btn-info">
+                    <i class="fas fa-clock me-2"></i>View History
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="card stats-card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-chart-line me-2"></i>Performance Statistics
+                </h5>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h3 class="text-primary">{{ "%.1f"|format(model_info.performance_metrics.accuracy * 100) if model_info else "N/A" }}%</h3>
+                        <small class="text-muted">Accuracy</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-success">{{ "%.3f"|format(model_info.performance_metrics.f1_score) if model_info else "N/A" }}</h3>
+                        <small class="text-muted">F1-Score</small>
+                    </div>
+                </div>
+                <a href="/statistics" class="btn btn-outline-primary btn-sm mt-3">
+                    <i class="fas fa-chart-bar me-1"></i>Detailed Stats
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-cogs me-2"></i>Model Information
+                </h5>
+                {% if model_info %}
+                <p><strong>Model:</strong> {{ model_info.model_name }}</p>
+                <p><strong>Type:</strong> {{ model_info.model_type }}</p>
+                <p><strong>Trained:</strong> {{ model_info.save_date[:10] }}</p>
+                {% else %}
+                <p class="text-muted">No model information available</p>
+                {% endif %}
+                <a href="/model-details" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-info-circle me-1"></i>Full Details
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-lightbulb me-2"></i>How It Works
+                </h5>
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="feature-icon text-primary" style="font-size: 2rem;">
+                            <i class="fas fa-file-text"></i>
+                        </div>
+                        <h6>1. Input Text</h6>
+                        <small class="text-muted">Enter news article text</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="feature-icon text-success" style="font-size: 2rem;">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <h6>2. Preprocessing</h6>
+                        <small class="text-muted">Clean and tokenize text</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="feature-icon text-warning" style="font-size: 2rem;">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h6>3. AI Analysis</h6>
+                        <small class="text-muted">ML model prediction</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="feature-icon text-info" style="font-size: 2rem;">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h6>4. Result</h6>
+                        <small class="text-muted">FAKE or REAL with confidence</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

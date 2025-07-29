@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Model Details - FactForge{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1 class="display-5 fw-bold text-primary">
+        <i class="fas fa-cogs me-3"></i>Model Details
+    </h1>
+    <p class="lead text-muted">Comprehensive information about the AI model</p>
+</div>
+
+{% if model_info %}
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-robot me-2"></i>Model Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td><strong>Model Name:</strong></td>
+                        <td>{{ model_info.model_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Algorithm:</strong></td>
+                        <td>{{ model_info.model_type }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Training Date:</strong></td>
+                        <td>{{ model_info.save_date[:10] }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Version:</strong></td>
+                        <td>{{ model_info.save_timestamp }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Performance Metrics
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <h3 class="text-primary">{{ "%.1f"|format(model_info.performance_metrics.accuracy * 100) }}%</h3>
+                        <small class="text-muted">Accuracy</small>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h3 class="text-success">{{ "%.3f"|format(model_info.performance_metrics.precision) }}</h3>
+                        <small class="text-muted">Precision</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-info">{{ "%.3f"|format(model_info.performance_metrics.recall) }}</h3>
+                        <small class="text-muted">Recall</small>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="text-warning">{{ "%.3f"|format(model_info.performance_metrics.f1_score) }}</h3>
+                        <small class="text-muted">F1-Score</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>How the Model Works
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-cog me-2"></i>Text Preprocessing</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Lowercase conversion</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Stopword removal (217 words)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Punctuation & digit removal</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Tokenization & lemmatization</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-search me-2"></i>Feature Extraction</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>TF-IDF Vectorization</li>
+                            <li><i class="fas fa-check text-success me-2"></i>N-gram analysis (1-2 grams)</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Feature selection</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Dimensionality optimization</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-database text-primary" style="font-size: 2rem;"></i>
+                <h6 class="mt-2">Training Data</h6>
+                <p class="text-muted small">Balanced dataset with equal FAKE and REAL news samples</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-brain text-success" style="font-size: 2rem;"></i>
+                <h6 class="mt-2">Algorithm</h6>
+                <p class="text-muted small">{{ model_info.model_type }} with optimized hyperparameters</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-shield-alt text-info" style="font-size: 2rem;"></i>
+                <h6 class="mt-2">Validation</h6>
+                <p class="text-muted small">5-fold cross-validation for robust performance</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+    <h4 class="text-muted mt-3">No Model Information Available</h4>
+    <p class="text-muted">Model details could not be loaded</p>
+</div>
+{% endif %}
+{% endblock %}

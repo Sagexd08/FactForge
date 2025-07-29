@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mx-auto">
+        <h1 class="text-center mb-4">📊 Batch Analysis Results</h1>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ summary.total }}</h5>
+                        <p class="card-text">Total Texts</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-danger text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ summary.fake }}</h5>
+                        <p class="card-text">FAKE ({{ "%.1f"|format(summary.fake_percentage) }}%)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center bg-success text-white">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ summary.real }}</h5>
+                        <p class="card-text">REAL ({{ "%.1f"|format(summary.real_percentage) }}%)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <a href="/batch" class="btn btn-primary btn-lg h-100 d-flex align-items-center justify-content-center">
+                    Analyze More
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Text Preview</th>
+                        <th>Prediction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.index }}</td>
+                        <td>{{ result.text_preview }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if result.prediction == 'FAKE' else 'success' }}">
+                                {{ result.prediction }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <h1 class="text-center mb-4">🔍 Fake News Detection</h1>
+        <p class="text-center text-muted">Enter news text below to check if it's likely to be fake or real</p>
+        
+        {% if model_info %}
+        <div class="alert alert-info">
+            <strong>Model:</strong> {{ model_info.model_name }} | 
+            <strong>Accuracy:</strong> {{ "%.1f"|format(model_info.performance_metrics.accuracy * 100) }}% |
+            <strong>F1-Score:</strong> {{ "%.3f"|format(model_info.performance_metrics.f1_score) }}
+        </div>
+        {% endif %}
+        
+        <form id="predictionForm">
+            <div class="mb-3">
+                <label for="text" class="form-label">News Text:</label>
+                <textarea class="form-control" id="text" name="text" rows="6" 
+                         placeholder="Enter the news article text here..." required></textarea>
+                <div class="form-text">Minimum 10 characters required</div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <span id="submitText">Analyze Text</span>
+                <span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2" style="display: none;"></span>
+            </button>
+        </form>
+        
+        <div id="result" style="display: none;"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    const submitText = document.getElementById('submitText');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    const resultDiv = document.getElementById('result');
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitText.textContent = 'Analyzing...';
+    loadingSpinner.style.display = 'inline-block';
+    resultDiv.style.display = 'none';
+    
+    try {
+        const formData = new FormData(e.target);
+        const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            displayResult(data);
+        } else {
+            displayError(data.error);
+        }
+    } catch (error) {
+        displayError('Network error: ' + error.message);
+    } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitText.textContent = 'Analyze Text';
+        loadingSpinner.style.display = 'none';
+    }
+});
+
+function displayResult(data) {
+    const resultDiv = document.getElementById('result');
+    const isFake = data.prediction === 'FAKE';
+    const confidence = data.confidence || 0.5;
+    
+    resultDiv.innerHTML = `
+        <div class="prediction-result ${isFake ? 'fake-result' : 'real-result'}">
+            <h3>${isFake ? '🚨' : '✅'} ${data.prediction}</h3>
+            ${data.confidence ? `
+                <p><strong>Confidence:</strong> ${(confidence * 100).toFixed(1)}%</p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill bg-${isFake ? 'danger' : 'success'}" 
+                         style="width: ${confidence * 100}%"></div>
+                </div>
+            ` : ''}
+            <hr>
+            <small class="text-muted">
+                Original: ${data.word_count} words | 
+                Processed: ${data.processed_word_count} words | 
+                Reduction: ${(data.reduction_ratio * 100).toFixed(1)}%
+            </small>
+        </div>
+    `;
+    resultDiv.style.display = 'block';
+}
+
+function displayError(error) {
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `
+        <div class="alert alert-danger">
+            <strong>Error:</strong> ${error}
+        </div>
+    `;
+    resultDiv.style.display = 'block';
+}
+</script>
+{% endblock %}

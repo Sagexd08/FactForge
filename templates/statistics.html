@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics - FactForge{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1 class="display-5 fw-bold text-primary">
+        <i class="fas fa-chart-bar me-3"></i>Analysis Statistics
+    </h1>
+    <p class="lead text-muted">Detailed insights into your news analysis patterns</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-search text-primary" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 text-primary">{{ stats.total_predictions }}</h3>
+                <p class="text-muted mb-0">Total Analyses</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-exclamation-triangle text-danger" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 text-danger">{{ stats.fake_count }}</h3>
+                <p class="text-muted mb-0">Fake News Detected</p>
+                <small class="text-muted">{{ "%.1f"|format(stats.fake_percentage) }}%</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-check-circle text-success" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 text-success">{{ stats.real_count }}</h3>
+                <p class="text-muted mb-0">Real News Verified</p>
+                <small class="text-muted">{{ "%.1f"|format(stats.real_percentage) }}%</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-chart-line text-info" style="font-size: 2rem;"></i>
+                <h3 class="mt-2 text-info">{{ "%.1f"|format(stats.avg_confidence * 100) }}%</h3>
+                <p class="text-muted mb-0">Avg Confidence</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-pie-chart me-2"></i>Prediction Distribution
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="distributionChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-area me-2"></i>Confidence Levels
+                </h5>
+            </div>
+            <div class="card-body">
+                <canvas id="confidenceChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if stats.recent_predictions %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-clock me-2"></i>Recent Analysis Trends
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Text Preview</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                        <th>Words</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prediction in stats.recent_predictions %}
+                    <tr>
+                        <td>{{ prediction.timestamp }}</td>
+                        <td>{{ prediction.text[:50] }}...</td>
+                        <td>
+                            <span class="badge bg-{{ 'danger' if prediction.prediction == 'FAKE' else 'success' }}">
+                                {{ prediction.prediction }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if prediction.confidence %}
+                                {{ "%.1f"|format(prediction.confidence * 100) }}%
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td>{{ prediction.word_count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if stats.total_predictions == 0 %}
+<div class="text-center py-5">
+    <i class="fas fa-chart-bar text-muted" style="font-size: 4rem;"></i>
+    <h4 class="text-muted mt-3">No Statistics Available</h4>
+    <p class="text-muted">Start analyzing news articles to see detailed statistics</p>
+    <a href="/analyze" class="btn btn-primary">
+        <i class="fas fa-search me-2"></i>Start Analyzing
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Distribution Chart
+const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+new Chart(distributionCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Fake News', 'Real News'],
+        datasets: [{
+            data: [{{ stats.fake_count }}, {{ stats.real_count }}],
+            backgroundColor: ['#dc2626', '#059669'],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// Confidence Chart (placeholder data for demonstration)
+const confidenceCtx = document.getElementById('confidenceChart').getContext('2d');
+new Chart(confidenceCtx, {
+    type: 'bar',
+    data: {
+        labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
+        datasets: [{
+            label: 'Predictions',
+            data: [0, 1, 2, 3, 4], // This would be calculated from actual data
+            backgroundColor: '#2563eb',
+            borderRadius: 5
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    stepSize: 1
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
