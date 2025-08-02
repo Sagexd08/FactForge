@@ -19,7 +19,7 @@ FactForge is a comprehensive machine learning system that uses advanced AI to de
 
 ### 🎨 **Modern User Interface**
 - **Web Dashboard**: Professional interface with FactForge branding
-- **Interactive CLI**: Command-line tools for power users
+- **Real-time Analysis**: Instant news authenticity detection
 - **Batch Processing**: Analyze multiple articles simultaneously
 - **History Tracking**: Complete analysis timeline and statistics
 
@@ -58,10 +58,7 @@ python web_app.py
 # Open browser to http://localhost:5000
 ```
 
-### 6. Or Use CLI
-```bash
-python cli_interface.py --text "Your news text here"
-```
+🌐 **That's it! FactForge is now ready to forge truth from information!**
 
 ## Project Structure
 
@@ -78,7 +75,6 @@ FactForge/
 │   ├── model_trainer.py        # Model training and evaluation
 │   └── predictor.py            # Prediction utilities
 ├── main.py                     # Main training script
-├── cli_interface.py            # Command line interface
 ├── web_app.py                  # Flask web application
 ├── requirements.txt            # Dependencies
 └── README.md                   # This file
@@ -97,20 +93,12 @@ python web_app.py
 - **Statistics**: Visual analytics and performance metrics
 - **Batch**: Process multiple articles simultaneously
 
-### 💻 **Command Line Interface**
-```bash
-# Interactive mode
-python cli_interface.py
-
-# Single prediction
-python cli_interface.py --text "Breaking news article text here"
-
-# Batch processing
-python cli_interface.py --batch input.txt --output results.csv
-
-# Model information
-python cli_interface.py --info
-```
+### 📊 **Batch Processing**
+The web interface includes built-in batch processing capabilities:
+- Upload multiple articles through the web interface
+- Process up to 50 articles simultaneously
+- Export results in CSV format
+- View comprehensive statistics and analytics
 
 ### 🔧 **Programmatic Usage**
 ```python
